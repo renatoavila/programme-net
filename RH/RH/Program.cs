@@ -8,8 +8,10 @@ namespace RH
         {
             var diretor = new Diretor();
             var gerente = new Gerente();
-
-            Console.WriteLine("Hello World!");
+            A a = new A();
+            a.MyProperty = 0;
+            a.b = 9;
+             
         }
     }
 }
