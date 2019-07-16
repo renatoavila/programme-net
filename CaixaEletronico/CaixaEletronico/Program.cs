@@ -1,14 +1,21 @@
-﻿using System;
+﻿using CaixaEletronico.Entidades;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CaixaEletronico
 {
     class Program
-    {
-
+    {   /// <summary>
+        ///  Intancia do Caixa eletronica
+        /// </summary>
+        private static ICaixaEletronico caixaEletronico { get; set; }
         static void Main(string[] args)
         {
+            caixaEletronico = new CaixaEletronico();
+
             var continuar = true;
-            while (continuar)
+            do
             {
                 var menu = GetTelaInicial();
 
@@ -31,7 +38,7 @@ namespace CaixaEletronico
                         Console.WriteLine("Valor inválido");
                         break;
                 }
-            }
+            } while (continuar);
         }
 
         private static void GetTelaSaldo()
@@ -39,7 +46,19 @@ namespace CaixaEletronico
             Console.Clear();
             Console.WriteLine("------------------------");
             Console.WriteLine("Caixa Eletrônico");
+            Console.WriteLine("------------------------");
+            Console.WriteLine();
             Console.WriteLine("Saldo");
+            Dictionary<TipoNota, int> saldo = caixaEletronico.Saldo();
+            if (saldo.Count == 0)
+            {
+                Console.WriteLine("Saldo zerado");
+            }
+            foreach (var item in saldo)
+            {
+
+                Console.WriteLine(GetNotaExtenso("Saldo",item.Key.ToString(),item.Value));
+            }
             Console.ReadLine();
         }
 
@@ -48,7 +67,26 @@ namespace CaixaEletronico
             Console.Clear();
             Console.WriteLine("------------------------");
             Console.WriteLine("Caixa Eletrônico");
+            Console.WriteLine("------------------------");
+            Console.WriteLine();
             Console.WriteLine("Saque");
+            Console.Write("Digite o valor que deseja sacar: ");
+            try
+            {
+                int valor = Convert.ToInt32(Console.ReadLine());
+                Dictionary<TipoNota, int> notasSacadas = caixaEletronico.Saque(valor);
+
+                foreach (var item in notasSacadas)
+                {
+                    Console.WriteLine(GetNotaExtenso("Saque",item.Key.ToString(), item.Value));
+     
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
+            
             Console.ReadLine();
         }
 
@@ -57,34 +95,44 @@ namespace CaixaEletronico
             Console.Clear();
             Console.WriteLine("------------------------");
             Console.WriteLine("Caixa Eletrônico");
+            Console.WriteLine("------------------------");
+            Console.WriteLine();
             Console.WriteLine("Depósito");
             Console.WriteLine("1 - Notas de 10");
             Console.WriteLine("2 - Notas de 20");
             Console.WriteLine("3 - Notas de 50");
             Console.WriteLine("4 - Voltar");
+            Console.WriteLine();
             Console.Write("Selecione a opção: ");
             var continuar = true;
-            while (continuar)
+
+            Deposito deposito = new Deposito();
+            do
             {
+
                 string opcaoDigitado = Console.ReadLine();
-                int valorDaNota;
                 switch (opcaoDigitado)
                 {
                     case "1":
-                            valorDaNota = 10;
-                            continuar = false;
+                        deposito.Nota = TipoNota.Dez;
+                        Console.Write("Quantidade de notas de 10: ");
+                        continuar = false;
                         break;
 
                     case "2":
-                        valorDaNota = 20;
+                        deposito.Nota = TipoNota.Vinte;
+                        Console.Write("Quantidade de notas de 20: ");
                         continuar = false;
+                        break;
+
                     case "3":
-                        valorDaNota = 50;
+                        deposito.Nota = TipoNota.Cinquenta;
+                        Console.Write("Quantidade de notas de 50: ");
                         continuar = false;
                         break;
 
                     case "4":
-                        valorDaNota = 0;
+                        //valorDaNota = 0;
                         continuar = false;
                         break;
 
@@ -92,11 +140,15 @@ namespace CaixaEletronico
                         Console.WriteLine("Valor inválido");
                         break;
                 }
+
+            } while (continuar);
+
+            if (deposito.Nota != null)
+            {
+                int valorDigitado = Convert.ToInt32(Console.ReadLine());
+                deposito.QuantidadeNotas = valorDigitado;
+                caixaEletronico.Deposito(deposito);
             }
-
-
-
-            Console.ReadLine();
         }
 
         private static string GetTelaInicial()
@@ -104,12 +156,20 @@ namespace CaixaEletronico
             Console.Clear();
             Console.WriteLine("------------------------");
             Console.WriteLine("Caixa Eletrônico");
+            Console.WriteLine("------------------------");
+            Console.WriteLine();
             Console.WriteLine("1 - Depósito");
             Console.WriteLine("2 - Saque");
             Console.WriteLine("3 - Saldo detalhado");
             Console.WriteLine("4 - Sair");
+            Console.WriteLine();
             Console.Write("Selecione a opção: ");
             return Console.ReadLine();
+        }
+
+        private static string GetNotaExtenso(string tipo,string nota, int valor)
+        {
+            return $"{tipo} de {valor} notas de {nota}";
         }
 
 
