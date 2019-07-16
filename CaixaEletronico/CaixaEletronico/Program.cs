@@ -106,7 +106,7 @@ namespace CaixaEletronico
             Console.Write("Selecione a opção: ");
             var continuar = true;
 
-            Deposito deposito = new Deposito();
+            var deposito = new Deposito();
             do
             {
 
@@ -132,7 +132,7 @@ namespace CaixaEletronico
                         break;
 
                     case "4":
-                        //valorDaNota = 0;
+                        deposito = null;
                         continuar = false;
                         break;
 
@@ -143,7 +143,7 @@ namespace CaixaEletronico
 
             } while (continuar);
 
-            if (deposito.Nota != null)
+            if (deposito != null)
             {
                 int valorDigitado = Convert.ToInt32(Console.ReadLine());
                 deposito.QuantidadeNotas = valorDigitado;
