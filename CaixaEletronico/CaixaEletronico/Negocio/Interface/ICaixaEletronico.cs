@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace CaixaEletronico
-{
+{ 
     public interface ICaixaEletronico
     {
         void Deposito(Deposito deposito);

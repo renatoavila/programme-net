@@ -1,12 +1,12 @@
 ﻿using CaixaEletronico.Entidades;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CaixaEletronico
 {
     class Program
-    {   /// <summary>
+    { 
+        /// <summary>
         ///  Intancia do Caixa eletronica
         /// </summary>
         private static ICaixaEletronico caixaEletronico { get; set; }
